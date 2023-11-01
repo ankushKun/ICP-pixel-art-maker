@@ -7,7 +7,7 @@ actor {
 
   let map = HashMap.HashMap<Text, Text>(5, Text.equal, Text.hash);
 
-  public func setData(creator : Text, imagB64 : Text) : async () {
+  public func setArt(creator : Text, imagB64 : Text) : async () {
     map.put(creator, imagB64);
   };
 
@@ -23,14 +23,14 @@ actor {
   //       ignore map.replace(creator, imagB64);
   //   };
 
-  //   public func deleteArt(creator:Text) : async () {
-  //       map.delete(creator);
-  //   };
+  public func deleteArt(creator : Text) : async () {
+    map.delete(creator);
+  };
 
-  public func getKey() : async Text {
+  public func getKeys() : async Text {
     var keys = "";
     for (key in map.keys()) {
-      keys := key # " " # keys;
+      keys := key # "," # keys;
     };
     return keys;
   };
@@ -38,9 +38,17 @@ actor {
   public func getValue() : async Text {
     var values = "";
     for (value in map.keys()) {
-      values := value # " " # values;
+      values := value # "," # values;
     };
     return values;
   };
+
+  // public func getKeyValuePair():async Text {
+  //   var keyValuePair = "";
+  //   for (key in map.keys()) {
+  //     keyValuePair := key # "," # map.get(key) # "," # keyValuePair;
+  //   };
+  //   return keyValuePair;
+  // };
 
 };
