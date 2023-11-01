@@ -10,6 +10,7 @@ export default function App() {
     const [mouseDown, setMouseDown] = React.useState(false);
     const [selectedColor, setSelectedColor] = React.useState("red");
     const [gridSize, setGridSize] = React.useState(25);
+    const [art64, setArt64] = React.useState("");
 
     React.useEffect(() => {
         const t = []
@@ -22,12 +23,8 @@ export default function App() {
         setPixels(t)
     }, [])
 
-    async function doGreet() {
-        const greeting = await test_backend.greet("INPUT STR");
-    }
-
-    async function addArt() {
-        const id = await test_backend.addArt("KEYSTR", "VALSTR");
+    async function addArt(data) {
+        const id = await test_backend.setArt(userKey, data);
         console.log(id);
     }
 
@@ -88,6 +85,7 @@ export default function App() {
     return (
         <div>
             <nav>
+                <div style={{ marginRight: "auto", fontWeight: "bold", fontSize: 25 }}>ICPixel</div>
                 {userKey?.substring(0, 5)}...{userKey.substring(userKey.length - 5, userKey.length)}
                 {userKey == "" ? <button onClick={connect}>connect</button> : <button onClick={disconnect}>disconnect</button>}
             </nav>
@@ -126,12 +124,17 @@ export default function App() {
                             })
                         }}>clear</button>
                         <button onClick={() => {
-                            addArt()
+                            if (userKey == "") {
+                                alert("connect to ICP first")
+                                return
+                            }
                             html2canvas(document.querySelector("#artwork")).then(canvas => {
                                 const canv = document.body.appendChild(canvas)
                                 canv.style.display = "none"
                                 const dataURL = canvas.toDataURL()
                                 console.log(dataURL)
+                                setArt64(dataURL)
+                                addArt(dataURL)
                             });
                         }}>Save to ICP</button>
                     </div>

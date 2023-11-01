@@ -7,8 +7,9 @@ actor {
 
   let map = HashMap.HashMap<Text, Text>(5, Text.equal, Text.hash);
 
-  public func setArt(creator : Text, imagB64 : Text) : async () {
+  public func setArt(creator : Text, imagB64 : Text) : async Nat {
     map.put(creator, imagB64);
+    return map.size();
   };
 
   public func getArt(creator : Text) : async ?Text {
@@ -43,12 +44,12 @@ actor {
     return values;
   };
 
-  // public func getKeyValuePair():async Text {
-  //   var keyValuePair = "";
-  //   for (key in map.keys()) {
-  //     keyValuePair := key # "," # map.get(key) # "," # keyValuePair;
-  //   };
-  //   return keyValuePair;
-  // };
+  public func getKeyValuePair() : async Text {
+    var keyValuePair = "";
+    for ((key, value) in map.entries()) {
+      keyValuePair := "(" # key # ", " # value # ")" # keyValuePair;
+    };
+    return keyValuePair;
+  };
 
 };
