@@ -3,6 +3,7 @@ import { AuthClient } from "@dfinity/auth-client";
 import { test_backend } from "../../declarations/test_backend";
 import html2canvas from "html2canvas";
 import "../assets/main.css"
+import Gallery from "./gallery";
 
 export default function App() {
     const [userKey, setUserKey] = React.useState("");
@@ -11,6 +12,7 @@ export default function App() {
     const [selectedColor, setSelectedColor] = React.useState("red");
     const [gridSize, setGridSize] = React.useState(25);
     const [art64, setArt64] = React.useState("");
+    const [showGallery, setShowGallery] = React.useState(false);
 
     React.useEffect(() => {
         const t = []
@@ -26,6 +28,7 @@ export default function App() {
     async function addArt(data) {
         const id = await test_backend.setArt(userKey, data);
         console.log(id);
+        alert("Congrats! Your Pixel Art has been saved to the ICP blockchain! Checkout Gallery to see it!")
     }
 
     React.useEffect(() => {
@@ -90,7 +93,10 @@ export default function App() {
                 {userKey == "" ? <button onClick={connect}>connect</button> : <button onClick={disconnect}>disconnect</button>}
             </nav>
             {/* GRID */}
-            <div className="row">
+            {showGallery ? <div>
+                <button onClick={() => setShowGallery(false)}>back</button>
+                <Gallery />
+            </div> : <div className="row">
                 <div className="col" id="artwork" style={{ border: "1px black solid" }} onMouseDown={() => setMouseDown(true)} onMouseUp={() => setMouseDown(false)}>
                     {pixels.map((row, y) => {
                         return (
@@ -136,10 +142,12 @@ export default function App() {
                                 setArt64(dataURL)
                                 addArt(dataURL)
                             });
-                        }}>Save to ICP</button>
+                        }}>Save to ICP</button><br />
+                        <button disabled title="COMING SOON">mint</button>
+                        <button onClick={() => setShowGallery(true)}>visit gallery</button>
                     </div>
                 </div>
-            </div>
+            </div>}
         </div>
     );
 }
