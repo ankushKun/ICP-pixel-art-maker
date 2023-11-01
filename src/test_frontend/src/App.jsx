@@ -1,6 +1,7 @@
 import React from "react";
 import { AuthClient } from "@dfinity/auth-client";
 import { test_backend } from "../../declarations/test_backend";
+import html2canvas from "html2canvas";
 import "../assets/main.css"
 
 export default function App() {
@@ -23,6 +24,11 @@ export default function App() {
 
     async function doGreet() {
         const greeting = await test_backend.greet("INPUT STR");
+    }
+
+    async function addArt() {
+        const id = await test_backend.addArt("KEYSTR", "VALSTR");
+        console.log(id);
     }
 
     React.useEffect(() => {
@@ -87,7 +93,7 @@ export default function App() {
             </nav>
             {/* GRID */}
             <div className="row">
-                <div className="col" style={{ border: "1px black solid" }} onMouseDown={() => setMouseDown(true)} onMouseUp={() => setMouseDown(false)}>
+                <div className="col" id="artwork" style={{ border: "1px black solid" }} onMouseDown={() => setMouseDown(true)} onMouseUp={() => setMouseDown(false)}>
                     {pixels.map((row, y) => {
                         return (
                             <div className="row">
@@ -120,7 +126,13 @@ export default function App() {
                             })
                         }}>clear</button>
                         <button onClick={() => {
-
+                            addArt()
+                            html2canvas(document.querySelector("#artwork")).then(canvas => {
+                                const canv = document.body.appendChild(canvas)
+                                canv.style.display = "none"
+                                const dataURL = canvas.toDataURL()
+                                console.log(dataURL)
+                            });
                         }}>Save to ICP</button>
                     </div>
                 </div>
